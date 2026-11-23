@@ -1,5 +1,6 @@
 package br.edu.unis.censo.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,8 +44,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.unis.censo.model.NomeFrequencia
+import java.text.Normalizer
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -73,7 +80,7 @@ fun CensoScreen(viewModel: CensoViewModel = viewModel()) {
             )
             Spacer(Modifier.height(8.dp))
 
-            Seletor(
+            SeletorComBusca(
                 rotulo = "Município (opcional)",
                 textoSelecionado = state.municipioSelecionado?.nome ?: "Todo o estado",
                 opcoes = listOf("Todo o estado") + state.municipios.map { it.nome },
@@ -166,6 +173,84 @@ private fun Seletor(
         }
     }
 }
+
+/**
+ * Seletor para listas grandes (um estado pode ter mais de 800 municípios):
+ * abre uma janela com campo de busca e lista preguiçosa (LazyColumn).
+ */
+@Composable
+private fun SeletorComBusca(
+    rotulo: String,
+    textoSelecionado: String,
+    opcoes: List<String>,
+    habilitado: Boolean,
+    aoSelecionar: (Int) -> Unit
+) {
+    var aberto by remember { mutableStateOf(false) }
+    var busca by remember { mutableStateOf("") }
+
+    Box {
+        OutlinedTextField(
+            value = textoSelecionado,
+            onValueChange = {},
+            readOnly = true,
+            enabled = habilitado,
+            label = { Text(rotulo) },
+            trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = null) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        // Camada transparente para abrir a busca ao tocar no campo
+        Box(
+            Modifier
+                .matchParentSize()
+                .clickable(enabled = habilitado) { busca = ""; aberto = true }
+        )
+    }
+
+    if (aberto) {
+        val filtradas = remember(busca, opcoes) {
+            val termo = normalizar(busca)
+            opcoes.withIndex().filter { normalizar(it.value).contains(termo) }
+        }
+        Dialog(onDismissRequest = { aberto = false }) {
+            Card(modifier = Modifier.fillMaxWidth().height(520.dp)) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(rotulo, style = MaterialTheme.typography.titleMedium)
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = busca,
+                        onValueChange = { busca = it },
+                        placeholder = { Text("Buscar...") },
+                        singleLine = true,
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    LazyColumn {
+                        items(filtradas, key = { it.index }) { (indice, nome) ->
+                            Text(
+                                nome,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        aberto = false
+                                        aoSelecionar(indice)
+                                    }
+                                    .padding(vertical = 12.dp, horizontal = 4.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Remove acentos e deixa minúsculo, para a busca achar "Sao" em "São". */
+private fun normalizar(texto: String): String =
+    Normalizer.normalize(texto, Normalizer.Form.NFD)
+        .replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
+        .lowercase()
 
 /** Abas que separam os nomes de mulheres, de homens e os sobrenomes. */
 @Composable
