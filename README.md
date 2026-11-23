@@ -4,9 +4,10 @@ Aplicativo Android que mostra **os nomes mais comuns de homens e mulheres (e os 
 
 Atividade da disciplina **Mobile Technologies** (UNIS — Ciência da Computação, 2026/2).
 
-## 👤 Integrante
+## 👥 Integrantes
 
 - Cristian Henrique Souza Jeronimo
+- Felipe Lima Pio
 
 ## 🎬 Vídeo de demonstração
 
