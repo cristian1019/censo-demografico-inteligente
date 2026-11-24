@@ -11,7 +11,7 @@ Atividade da disciplina **Mobile Technologies** (UNIS — Ciência da Computaç�
 
 ## 🎬 Vídeo de demonstração
 
-[Link do vídeo](COLOQUE_AQUI_O_LINK_DO_VIDEO)
+[Assistir no Google Drive](https://drive.google.com/file/d/1HGJ4Q_xdwbR3YdRV7xjJkWvOm7kbn_td/view?usp=sharing)
 
 ## 📱 Funcionalidades
 
@@ -71,6 +71,8 @@ app/src/main/java/br/edu/unis/censo/
 5. Clique em **Run ▶** (ou `Shift + F10`).
 
 O app precisa de internet para consultar as APIs do IBGE.
+
+**Instalar sem compilar:** baixe o arquivo [`apk/censo-inteligente-v1.0.apk`](apk/censo-inteligente-v1.0.apk) no celular (Android 7.0 ou superior), abra-o e permita a instalação de fontes desconhecidas quando o Android pedir. No emulador, basta arrastar o APK para a janela.
 
 Para gerar o APK pela linha de comando:
 
