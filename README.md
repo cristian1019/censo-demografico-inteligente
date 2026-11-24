@@ -11,7 +11,7 @@ Atividade da disciplina **Mobile Technologies** (UNIS — Ciência da Computaç�
 
 ## 🎬 Vídeo de demonstração
 
-[Assistir no Google Drive](https://drive.google.com/file/d/1HGJ4Q_xdwbR3YdRV7xjJkWvOm7kbn_td/view?usp=sharing)
+[Assistir no Google Drive](https://drive.google.com/file/d/19a3pcPJyOir2hgOzB9yTK8o2F9gMYH-H/view?usp=sharing)
 
 ## 📱 Funcionalidades
 
